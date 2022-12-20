@@ -26,10 +26,10 @@ class Parser:
         'logo_img': '로고 이미지',
         'address': '위치',
         'due_time': '마감일',
-        'orgin_link': '원 공고 링크',  # 직접 추가하는 data
+        'origin_link': '원 공고 링크',  # 직접 추가하는 data
         # 'hashtag': '해시태그',  # parse from 'jd'
     }
-    valid_data: bool = False
+    is_valid: bool = False
     verify_keywords: dict = {  # verify whether raw data is valid or not. keywords must be in raw data
         'main_tasks': '주요 업무',
         'requirements': '자격 요건',
@@ -41,7 +41,7 @@ class Parser:
     }
     not_valid_keys: str = ''
 
-    def __init__(self, recruit_id: int) -> None:
+    def __init__(self, recruit_id: str | int) -> None:
         self.recruit_id = str(recruit_id)
         self.url += "/wd/" + self.recruit_id
         for key in self.raw_data_desc.keys():
@@ -49,7 +49,7 @@ class Parser:
         self.get_request()
         self.set_content()
         self.parse_data()
-        self.raw_data['orgin_link'] = self.url
+        self.raw_data['origin_link'] = self.url
         self.verify_data()
 
     def get_request(self) -> None:
