@@ -19,6 +19,7 @@ class IdGenerator:
     load_size: int = 10
 
     def __init__(self, offset: int = 0, limit_size: int = 50, load_size: int = 10):
+        # TODO: add random state
         self.offset = offset
         self.limit_size = limit_size
         self.load_size = load_size
