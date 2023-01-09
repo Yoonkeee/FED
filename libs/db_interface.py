@@ -18,6 +18,8 @@ class Interface:
     getter: pymysql.Connection.cursor = None
     sqlalchemy_db_url: str = ''
     engine: sqlalchemy.engine.base.Engine = None
+    session: sqlalchemy.orm.session.Session = None
+    base: sqlalchemy.ext.declarative = None
 
     # db = pymysql.connect( host=HOST, port=PORT, db=SCHEMA, user=USER, passwd=PASSWORD, charset="utf8", )
     def __init__(self):
@@ -29,10 +31,7 @@ class Interface:
         self.db = pymysql.connect(host=HOST, port=PORT, user=DB_USER, password=PASSWORD, db=SCHEMA, charset="utf8")
         self.setter = self.db.cursor()
         self.getter = self.db.cursor()
-        self.sqlalchemy_db_url = f"mariadb://{DB_USER}:{PASSWORD}@{HOST}:{PORT}/{SCHEMA}?charset=utf8"
-        self.engine = create_engine(self.sqlalchemy_db_url, encoding="utf-8", echo=True)
-
-    # just check only if post_id exists in jpb_post table
+    # just check only if post_id exists in job_post table
 
     def duplication_check(self):
         select_query = f"""
@@ -104,5 +103,6 @@ class Interface:
 
     def get_list_all(self):
         pass
+
 
 
