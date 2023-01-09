@@ -9,7 +9,7 @@ from bs4 import BeautifulSoup
 
 class Parser:
     # 86252
-    recruit_id: str = ''
+    post_id: str = ''
     url: str = "https://www.wanted.co.kr"
     request: requests = None
     bs: BeautifulSoup = None
@@ -41,9 +41,9 @@ class Parser:
     }
     not_valid_keys: str = ''
 
-    def __init__(self, recruit_id: str | int) -> None:
-        self.recruit_id = str(recruit_id)
-        self.url += "/wd/" + self.recruit_id
+    def __init__(self, post_id: str | int) -> None:
+        self.post_id = str(post_id)
+        self.url += "/wd/" + self.post_id
         for key in self.raw_data_desc.keys():
             self.raw_data[key] = ''  # 1
         self.get_request()
@@ -61,10 +61,10 @@ class Parser:
         self.head_content = self.bs.find("script", type="application/ld+json")
         self.main_content = self.bs.find("script", type="application/json")
         self.main_content = json.loads(self.main_content.contents[0])
-        self.main_content = self.main_content['props']['pageProps']['head'][
-            self.recruit_id]
+        self.main_content = self.main_content['props']['pageProps']['head'][self.post_id]
 
     def parse_data(self) -> None:
+        self.raw_data['post_id'] = self.post_id
         for key, val in self.main_content.items():
             self.raw_data[key] = val
 
@@ -73,10 +73,10 @@ class Parser:
             if keyword not in self.raw_data.keys():
                 self.not_valid_keys = f'{self.url}에서 키워드 {keyword}가 파싱되지 않음.'
                 return None
-        self.valid_data = True
+        self.is_valid = True
 
     def get_raw_data(self) -> dict:
-        if self.valid_data:
+        if self.is_valid:
             result = {
                 'is_valid': True,
                 'data': self.raw_data

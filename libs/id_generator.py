@@ -13,7 +13,7 @@ class IdGenerator:
     }
     # url = "https://www.wanted.co.kr/api/v4/jobs?1670145066301&country=kr&tag_type_ids=518&job_sort=company.response_rate_order&locations=all&years=-1"
     url: str = "https://www.wanted.co.kr/api/v4/jobs?1670145066301&country=kr"
-    recruit_ids: List[str] = []
+    post_ids: List[str] = []
     offset: int = 0
     limit_size: int = 50
     load_size: int = 10
@@ -35,9 +35,9 @@ class IdGenerator:
             loaded_data = json.loads(soup.text)
             if loaded_data["data"]:
                 for data in loaded_data["data"]:
-                    self.recruit_ids.append(str(data["id"]))
+                    self.post_ids.append(str(data["id"]))
                 self.offset += self.load_size
             else:
                 break
 
-        return self.recruit_ids
+        return self.post_ids

@@ -1,16 +1,28 @@
-from libs import parser, cleanser, id_generator
+from fastapi import FastAPI
+from libs import parser, cleanser, id_generator, db_interface
+import requests
 
-# parse_test = parser.Parser(86252)
-# print(parse_test.get_raw_data())
+app = FastAPI()
 
-generated_ids = id_generator.IdGenerator().get_id_list()
-for article_id in generated_ids:
-    parse_test = parser.Parser(article_id)
-    # print(parse_test.get_raw_data())
-    cleanse_test = cleanser.Cleanser(parse_test.get_raw_data())
-    cleanse_test.cleanse()
-    # if not cleanse_test.cleansed_data:
-    #     print(cleanse_test.raw_data['data']['jd'])
-    print(article_id, cleanse_test.cleansed_data)
 
-# wanted.co.kr/wd/140012 특수케이스
+@app.get("/")
+def read_root():
+    return {"Hello": "World"}
+
+
+@app.get('/get/list/')
+async def get_list(tech_stacks: str):
+    print(tech_stacks)
+    return db_interface.Interface().get_list(tech_stacks)
+
+
+@app.get('/get/list/all')
+async def get_list_all():
+    return db_interface.Interface().get_list_all()
+
+
+# set router
+@app.get("/get/{company_name}")
+def get_data(company_name: str):
+    return db_interface.Interface().get(company_name)
+

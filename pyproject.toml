@@ -7,7 +7,7 @@ readme = "README.md"
 packages = [{include = "fed_my"}]
 
 [tool.poetry.dependencies]
-python = "3.11"
+python = "^3.11"
 jupyter = "^1.0.0"
 black = "^22.10.0"
 selenium = "^4.7.2"
@@ -18,6 +18,11 @@ nltk = "^3.8"
 corpora = "^1.0"
 openai = "^0.25.0"
 spacy = "^3.4.4"
+pymysql = "^1.0.2"
+django-environ = "^0.9.0"
+fastapi = "^0.89.0"
+uvicorn = "^0.20.0"
+sqlalchemy = "^1.4.46"
 
 
 [build-system]
