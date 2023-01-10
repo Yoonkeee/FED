@@ -50,3 +50,4 @@ class Cleanser:
         self.cleansed_data['team_name'] = self.raw_data['data']['post_id']  # temporary
         self.cleansed_data['post_link'] = self.raw_data['data']['origin_link']
         self.cleansed_data['address'] = self.raw_data['data']['location']
+        self.cleansed_data['company_logo_url'] = self.raw_data['data']['logo_img']

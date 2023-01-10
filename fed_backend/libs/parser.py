@@ -23,7 +23,7 @@ class Parser:
         # 'advantages': '우대 사항',  # parse from 'jd'
         # 'walfare': '혜택 및 복지',  # parse from 'jd'
         'company_name': '회사명',
-        'logo_img': '로고 이미지',
+        'company_logo_url': '로고 이미지',
         'address': '위치',
         'due_time': '마감일',
         'origin_link': '원 공고 링크',  # 직접 추가하는 data

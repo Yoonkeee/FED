@@ -1,7 +1,10 @@
 
 .DS_Store
-*.ipynb
+
+test.py
+
+libs/__pycache__/
+
+fed_backend/.env
 
 .idea/
-
-.editorconfig

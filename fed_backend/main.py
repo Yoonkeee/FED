@@ -25,9 +25,9 @@ def read_root():
 
 
 @app.get('/get/list/')
-async def get_list(tech_stacks: str):
+async def get_list_by_stacks(tech_stacks: str):
     print(tech_stacks)
-    return db_interface.Interface().get_list(tech_stacks)
+    return db_interface.Interface().get_list_by_stacks(tech_stacks)
 
 
 @app.get('/get/list/all')
@@ -37,8 +37,8 @@ async def get_list_all():
 
 # set router
 @app.get("/get/{company_name}")
-def get_data(company_name: str):
-    return db_interface.Interface().get(company_name)
+def get_by_company_name(company_name: str):
+    return db_interface.Interface().get_by_company_name(company_name)
 
 
 # @app.get('/get2/', response_model=schemas.GetListByStack)

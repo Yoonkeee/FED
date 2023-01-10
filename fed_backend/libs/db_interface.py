@@ -16,10 +16,13 @@ class Interface:
     db: pymysql.connections.Connection = None
     setter: pymysql.Connection.cursor = None
     getter: pymysql.Connection.cursor = None
-    sqlalchemy_db_url: str = ''
-    engine: sqlalchemy.engine.base.Engine = None
-    session: sqlalchemy.orm.session.Session = None
-    base: sqlalchemy.ext.declarative = None
+    column_names: List[str] = ''
+
+    # sqlalchemy_db_url: str = ''
+    # engine: sqlalchemy.engine.base.Engine = None
+    # session: sqlalchemy.orm.session.Session = None
+    # base: sqlalchemy.ext.declarative = None
+
 
     # db = pymysql.connect( host=HOST, port=PORT, db=SCHEMA, user=USER, passwd=PASSWORD, charset="utf8", )
     def __init__(self):
@@ -31,6 +34,8 @@ class Interface:
         self.db = pymysql.connect(host=HOST, port=PORT, user=DB_USER, password=PASSWORD, db=SCHEMA, charset="utf8")
         self.setter = self.db.cursor()
         self.getter = self.db.cursor()
+        self.getter.execute("SELECT `COLUMN_NAME` FROM `INFORMATION_SCHEMA`.`COLUMNS` WHERE `TABLE_NAME`='job_post'")
+        self.column_names = [item[0] for item in self.getter.fetchall()]
     # just check only if post_id exists in job_post table
 
     def duplication_check(self):
@@ -58,7 +63,8 @@ class Interface:
             {str(self.cleansed_data['team_id'])}, 
             '{self.cleansed_data['team_name']}', 
             '{self.cleansed_data['post_link']}', 
-            '{self.cleansed_data['address']}'
+            '{self.cleansed_data['address']}',
+            '{self.cleansed_data['company_logo_url']}'
             )
             """
             # {str(self.cleansed_data['tech_stacks'].keys())},
@@ -66,43 +72,44 @@ class Interface:
 
             self.setter.execute(insert_query)
             self.db.commit()
+        # else:
+        #     insert_query = f"""
+        #     UPDATE job_post
+        #     SET COMPANY_LOGO_URL =
+        #     '{self.cleansed_data['company_logo_url']}'
+        #     WHERE POST_ID = {str(self.cleansed_data['post_id'])}
+        #     """
+        #     self.setter.execute(insert_query)
+        #     self.db.commit()
 
-    def get(self, comany_name: str):
+    def get_by_company_name(self, comany_name: str):
         select_query = f"""
-#         SELECT * FROM job_post WHERE COMPANY_NAME = '{comany_name}' 
         SELECT * FROM job_post WHERE COMPANY_NAME = '{comany_name}' 
         """
-        # get column names from self.getter
-        self.getter.execute("SELECT `COLUMN_NAME` FROM `INFORMATION_SCHEMA`.`COLUMNS` WHERE `TABLE_NAME`='job_post';")
-        column_names = [item[0] for item in self.getter.fetchall()]
 
         self.getter.execute(select_query)
-        selected = self.getter.fetchone()
+        selected = self.getter.fetchall()
 
-        result = {key: val for key, val in zip(column_names, selected)}
+        result = [{key: val for key, val in zip(self.column_names, item)} for item in selected]
         return result
 
-    def get_list(self, tech_stacks: str):
+    def get_list_by_stacks(self, tech_stacks: str):
         condition: str = ''
-        result: List[str] = []
+        result:  List[str] | List[dict] | str = []
         for tech_stack in tech_stacks.split(','):
             result.append(f"TECH_STACKS LIKE '%{tech_stack}%'")
-        print(condition)
         condition = ' AND '.join(result)
-        print(condition)
         select_query = f"""
         SELECT * 
         FROM job_post 
         WHERE 
         {condition}
         """
-        print(select_query)
         self.getter.execute(select_query)
         selected = self.getter.fetchall()
-        return selected
+        result = [{key: val for key, val in zip(self.column_names, item)} for item in selected]
+        return result
 
     def get_list_all(self):
         pass
-
-
 
